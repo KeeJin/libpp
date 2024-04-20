@@ -19,11 +19,18 @@ jobs:
                 with:
                     fetch-depth: 0
                     submodules: 'recursive'
+            -
+                name: Setup conan 2.0
+                run: |
+                  sudo apt-get update
+                  sudo apt-get install python3-pip
+                  pip3 install conan
+                  conan profile detect
             - 
                 name: Compile code and run tests
                 run: |
-                    mkdir -p build
-                    cd build
-                    cmake -DBUILD_TESTING=ON ..
-                    make -j
+                    conan install . --build=missing
+                    cmake --preset conan-release
+                    cmake --build --preset conan-release
+                    cd build/Release
                     ctest
