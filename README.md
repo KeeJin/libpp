@@ -1,4 +1,6 @@
-# Libpp - Generic C++ library for path planning algorithms
+# Libpp - Generic C++ library for path planning algorithms  
+
+[![Ubuntu CI](https://github.com/KeeJin/libpp/actions/workflows/ubuntu-ci.yml/badge.svg)](https://github.com/KeeJin/libpp/actions/workflows/ubuntu-ci.yml)
 
 ## Compilation Instructions
 

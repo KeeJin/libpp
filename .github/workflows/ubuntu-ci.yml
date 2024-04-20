@@ -24,8 +24,8 @@ jobs:
                 run: |
                     mkdir -p build
                     cd build
-                    cmake ..
-                    make -
+                    cmake -DBUILD_TESTING=ON ..
+                    make -j
             - 
                 name: Run tests
-                run: ctest --output-on-failure
+                run: make test
