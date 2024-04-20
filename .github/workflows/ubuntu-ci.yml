@@ -20,12 +20,10 @@ jobs:
                     fetch-depth: 0
                     submodules: 'recursive'
             - 
-                name: Compile code
+                name: Compile code and run tests
                 run: |
                     mkdir -p build
                     cd build
                     cmake -DBUILD_TESTING=ON ..
                     make -j
-            - 
-                name: Run tests
-                run: make test
+                    ctest
