@@ -12,8 +12,8 @@
 
 ### Compile with tests from root project directory:
 
-    ```
-        mkdir -p build
-        conan install . --output-folder=build --build=missing
-        cd build && cmake .. && make -j
-    ```
+```
+    mkdir -p build
+    conan install . --output-folder=build --build=missing
+    cd build && cmake .. && make -j
+```
