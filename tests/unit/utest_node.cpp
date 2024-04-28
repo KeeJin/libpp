@@ -13,12 +13,12 @@
 using namespace libpp_core;
 
 TEST(NodeTest, InvalidNodeAttribute) {
-  EXPECT_NO_THROW(NodeAttribute<int> node_attribute(
-                      1, Dimension<int>("x dimension", 0, 5, std::nullopt)););
+  EXPECT_NO_THROW(
+      NodeAttribute node_attribute(1, Dimension("x dimension", 0, 5, 1)););
 }
 
 TEST(NodeTest, ValidNodeAttribute) {
-  EXPECT_THROW(NodeAttribute<int> node_attribute(
-                   6, Dimension<int>("x dimension", 0, 5, std::nullopt));
-               , OutOfBoundError);
+  EXPECT_THROW(
+      NodeAttribute node_attribute(6, Dimension("x dimension", 0, 5, 1));
+      , OutOfBoundError);
 }

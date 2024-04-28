@@ -12,34 +12,45 @@
 #include <array>
 #include <memory>
 
+#include "fmt/ostream.h"
+
 #include "libpp/core/dimension.hpp"
+#include "libpp/core/node.hpp"
 
 namespace libpp_core {
 template <int Size>
 class SearchSpace {
-  public:
-  SearchSpace(Dimensions<Size> dims) {
+ public:
+  SearchSpace(Dimensions<Size> dims) : dims_(dims) {
     for (const auto& dim : dims) {
-      if (!dim->IsSearchBoundValid()) {
+      if (!dim.IsSearchBoundValid()) {
         throw std::invalid_argument("Invalid search bound");
       }
     }
-    dims_ = std::move(dims);
   }
-  int GetDimensionSize() const { return dims_.size(); }
 
-  private:
-  Dimensions<Size> dims_;
+  int GetDimensionSize() const { return dims_.size(); }
+  bool IsNodeWithinSearchSpace(const Node<Size>& node) const {
+    for (int i = 0; i < Size; ++i) {
+      if (!dims_[i] == (node.GetAttributes()[i].GetDimension())) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   // override << operator to log the search space
-  friend std::ostream& operator<<(std::ostream& os, const SearchSpace& space) {
+  friend std::ostream& operator<<(std::ostream& os, const SearchSpace& search_space) {
     os << "Logging SearchSpace dimensions: \n";
-    for (const auto& dim : space.dims_) {
-      os << *(dim.get());
+    for (const auto& dim : search_space.dims_) {
+      os << dim;
     }
     os << "-----------------------------" << std::endl;
     return os;
   }
+
+ private:
+  Dimensions<Size> dims_;
 };
 }  // namespace libpp_core
 

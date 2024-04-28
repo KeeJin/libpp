@@ -13,27 +13,31 @@
 #include "libpp/core/error_types.hpp"
 
 namespace libpp_core {
+struct NodeAttribute {
+  NodeAttribute(const double& value, const Dimension& dimension);
 
-struct NodeAttributeBase {
-  virtual ~NodeAttributeBase() = default;
-};
-
-template <typename T>
-struct NodeAttribute : public NodeAttributeBase {
-  NodeAttribute(const T& value, const Dimension<T>& dimension)
-      : value_(value), dimension_(dimension) {
-    if (!dimension.IsValueWithinBound(value)) {
-      throw OutOfBoundError("Value is not within bound");
-    }
-  }
+  double GetValue() const;
+  Dimension GetDimension();
 
  private:
-  T value_;
-  Dimension<T> dimension_;
+  double value_;
+  Dimension dimension_;
 };
 
 template <int Size>
-using NodeAttributes = std::array<std::unique_ptr<NodeAttributeBase>, Size>;
+using NodeAttributes = std::array<NodeAttribute, Size>;
+// override the == operator for NodeAttributes
+template <int Size>
+bool operator==(const NodeAttributes<Size>& lhs,
+                const NodeAttributes<Size>& rhs) {
+  for (int i = 0; i < Size; ++i) {
+    if (!(lhs[i].GetValue() == rhs[i].GetValue()) ||
+        !(lhs[i].GetDimension() == rhs[i].GetDimension())) {
+      return false;
+    }
+  }
+  return true;
+}
 
 class NodeBase {
  public:
@@ -48,6 +52,7 @@ class Node : public NodeBase {
   ~Node() = default;
 
   void MarkAsExplored() { is_explored_ = true; }
+  NodeAttributes<Size> GetAttributes() const { return attributes_; }
 
  private:
   bool is_explored_;

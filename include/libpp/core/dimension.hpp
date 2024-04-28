@@ -10,71 +10,64 @@
 #define CORE_DIMENSION_HPP
 
 #include <memory>
-#include <optional>
 #include <ostream>
 #include <string>
 
+#include "fmt/ostream.h"
+
 namespace libpp_core {
-template <typename T>
 struct SearchBound {
-  T lower_bound;
-  T upper_bound;
+  double lower_bound;
+  double upper_bound;
 };
 
-class DimensionBase {
+class Dimension {
  public:
-  virtual ~DimensionBase() = default;
-
-  virtual bool IsSearchBoundValid() const = 0;
-  std::string name;
-
- protected:
-  virtual std::ostream& LogInfo(std::ostream& os) const {
-    os << "Base class logging dimension" << std::endl;
-    return os;
-  }
-  friend std::ostream& operator<<(std::ostream& os,
-                                  const DimensionBase& parent) {
-    return (parent.LogInfo(os));
-  }
-};
-
-template <typename T>
-class Dimension : public DimensionBase {
- public:
-  Dimension(std::string name, T lower_bound, T upper_bound,
-            std::optional<T> step)
-      : name_(name), bound_({lower_bound, upper_bound}), step_(step) {}
-  bool IsSearchBoundValid() const override {
+  Dimension(const std::string& name, const double& lower_bound,
+            const double& upper_bound, const double& step,
+            const std::string& unit = "")
+      : name_(name),
+        bound_({lower_bound, upper_bound}),
+        step_(step),
+        unit_(unit) {}
+  bool IsSearchBoundValid() const {
     return bound_.lower_bound < bound_.upper_bound;
   }
-  bool IsValueWithinBound(const T& value) const {
+  bool IsValueWithinBound(const double& value) const {
     return value >= bound_.lower_bound && value <= bound_.upper_bound;
   }
+  std::string GetName() const { return name_; }
+  std::string GetUnit() const { return unit_; }
+  SearchBound GetBound() const { return bound_; }
+  double GetStep() const { return step_; }
 
- protected:
-  std::ostream& LogInfo(std::ostream& os) const override {
-    os << "Logging dimension " << name_ << ": ";
-    os << "Lower bound: " << bound_.lower_bound << ", ";
-    os << "Upper bound: " << bound_.upper_bound << ", ";
-    if (step_.has_value()) {
-      os << "Step: " << step_.value() << std::endl;
-    } else {
-      os << "Step: N/A" << std::endl;
-    }
+  // override << operator
+  friend std::ostream& operator<<(std::ostream& os, const Dimension& dim) {
+    os << "Logging dimension " << dim.name_ << ": ";
+    os << "Unit: " << dim.unit_ << ", ";
+    os << "Lower bound: " << dim.bound_.lower_bound << ", ";
+    os << "Upper bound: " << dim.bound_.upper_bound << ", ";
+    os << "Step: " << dim.step_ << std::endl;
     return os;
+  }
+
+  // override == operator
+  bool operator==(const Dimension& other) const {
+    return (name_ == other.name_ && unit_ == other.unit_ &&
+            bound_.lower_bound == other.bound_.lower_bound &&
+            bound_.upper_bound == other.bound_.upper_bound &&
+            step_ == other.step_);
   }
 
  private:
   std::string name_;
-  SearchBound<T> bound_;
-  std::optional<T> step_;
+  std::string unit_;
+  SearchBound bound_;
+  double step_;
 };
 
-// Note: we use unique_ptr to prevent modifying the dimension after it is
-// passed into the search space.
 template <int Size>
-using Dimensions = std::array<std::unique_ptr<DimensionBase>, Size>;
+using Dimensions = std::array<Dimension, Size>;
 
 }  // namespace libpp_core
 

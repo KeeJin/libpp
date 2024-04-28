@@ -12,13 +12,15 @@
 #include "libpp/core/path_planner_base.hpp"
 
 namespace libpp {
-class BFSPathPlanner : public libpp_core::PathPlannerBase {
+template <int Size>
+class BFSPathPlanner : public libpp_core::PathPlannerBase<Size> {
  public:
-  BFSPathPlanner(PathPlannerParams params);
+  BFSPathPlanner(PathPlannerParams<Size> params)
+      : PathPlannerBase<Size>(params) {}
 
-  void StepOnce() override;
-  void StepUntilGoal() override;
-  bool ComputePlan() override;
+  void StepOnce() override {}
+  void StepUntilGoal() override  {}
+  bool ComputePlan() override { return false; }
 };
 }  // namespace libpp
 

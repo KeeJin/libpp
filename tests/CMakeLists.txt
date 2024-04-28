@@ -12,6 +12,13 @@ target_link_libraries(utests
 )
 
 ## Add integration tests
+add_executable(test_search_space
+    test_search_space.cpp
+)
+target_link_libraries(test_search_space
+    ${PROJECT_NAME}
+    spdlog::spdlog
+)
 
 ## Add performance tests
 
