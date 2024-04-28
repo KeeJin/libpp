@@ -22,3 +22,9 @@
 ```
     cmake --build --preset conan-release
 ```
+
+## Running Unit Tests
+```
+    ctest --test-dir ./build/Release/ --output-on-failure
+```
+
