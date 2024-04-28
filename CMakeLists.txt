@@ -46,7 +46,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
 find_package(spdlog REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
-    src/details/node.cpp
+    src/planners/search/bfs.cpp
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
 target_include_directories(${PROJECT_NAME} PUBLIC

@@ -9,25 +9,16 @@
 #ifndef SEARCH_BFS_HPP
 #define SEARCH_BFS_HPP
 
-#include "libpp/details/path_planner_base.hpp"
+#include "libpp/core/path_planner_base.hpp"
 
 namespace libpp {
-class BFSPathPlanner : public PathPlannerBase {
+class BFSPathPlanner : public libpp_core::PathPlannerBase {
  public:
-  BFSPathPlanner(const PathPlannerParams &params) : PathPlannerBase(params) {}
+  BFSPathPlanner(PathPlannerParams params);
 
-  void StepOnce() override {
-    // Implement BFS algorithm
-  }
-
-  void StepUntilGoal() override {
-    // Implement BFS algorithm
-  }
-
-  bool ComputePlan() override {
-    // Implement BFS algorithm
-    return false;
-  }
+  void StepOnce() override;
+  void StepUntilGoal() override;
+  bool ComputePlan() override;
 };
 }  // namespace libpp
 

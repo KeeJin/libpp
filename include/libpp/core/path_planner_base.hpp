@@ -6,17 +6,17 @@
  * @copyright Copyright (c) 2024 Cheo Kee Jin.
  */
 
-#ifndef DETAILS_PATH_PLANNER_BASE_HPP
-#define DETAILS_PATH_PLANNER_BASE_HPP
+#ifndef CORE_PATH_PLANNER_BASE_HPP
+#define CORE_PATH_PLANNER_BASE_HPP
 
-#include "libpp/details/node.hpp"
+#include "libpp/core/node.hpp"
 
-namespace libpp {
+namespace libpp_core {
 class PathPlannerBase {
  public:
   struct PathPlannerParams {
-    Node start_state;
-    Node goal_state;
+    std::unique_ptr<NodeBase> start_state;
+    std::unique_ptr<NodeBase> goal_state;
   };
   enum class PlannerStatus {
     kStaging,
@@ -26,7 +26,7 @@ class PathPlannerBase {
   };
 
  public:
-  PathPlannerBase(const PathPlannerParams& params) : params_(params) {}
+  PathPlannerBase(PathPlannerParams params) : params_(std::move(params)) {}
   virtual ~PathPlannerBase() = default;
 
   virtual void StepOnce() = 0;
@@ -42,6 +42,6 @@ class PathPlannerBase {
  private:
   PlannerStatus status_ = PlannerStatus::kStaging;
 };
-}  // namespace libpp
+}  // namespace libpp_core
 
-#endif /* DETAILS_PATH_PLANNER_BASE_HPP */
+#endif /* CORE_PATH_PLANNER_BASE_HPP */

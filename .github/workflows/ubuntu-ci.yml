@@ -32,5 +32,4 @@ jobs:
                     conan install . --build=missing
                     cmake --preset conan-release
                     cmake --build --preset conan-release
-                    cd build/Release
-                    ctest
+                    ctest --test-dir ./build/Release/
