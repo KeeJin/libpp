@@ -12,7 +12,7 @@
 #include <array>
 #include <memory>
 
-#include "fmt/ostream.h"
+#include <spdlog/fmt/ostr.h>
 
 #include "libpp/core/dimension.hpp"
 #include "libpp/core/node.hpp"

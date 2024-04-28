@@ -13,7 +13,7 @@
 #include <ostream>
 #include <string>
 
-#include "fmt/ostream.h"
+#include <spdlog/fmt/ostr.h>
 
 namespace libpp_core {
 struct SearchBound {
@@ -25,21 +25,14 @@ class Dimension {
  public:
   Dimension(const std::string& name, const double& lower_bound,
             const double& upper_bound, const double& step,
-            const std::string& unit = "")
-      : name_(name),
-        bound_({lower_bound, upper_bound}),
-        step_(step),
-        unit_(unit) {}
-  bool IsSearchBoundValid() const {
-    return bound_.lower_bound < bound_.upper_bound;
-  }
-  bool IsValueWithinBound(const double& value) const {
-    return value >= bound_.lower_bound && value <= bound_.upper_bound;
-  }
-  std::string GetName() const { return name_; }
-  std::string GetUnit() const { return unit_; }
-  SearchBound GetBound() const { return bound_; }
-  double GetStep() const { return step_; }
+            const std::string& unit = "");
+
+  bool IsSearchBoundValid() const;
+  bool IsValueWithinBound(const double& value) const;
+  std::string GetName() const;
+  std::string GetUnit() const;
+  SearchBound GetBound() const;
+  double GetStep() const;
 
   // override << operator
   friend std::ostream& operator<<(std::ostream& os, const Dimension& dim) {
@@ -52,12 +45,7 @@ class Dimension {
   }
 
   // override == operator
-  bool operator==(const Dimension& other) const {
-    return (name_ == other.name_ && unit_ == other.unit_ &&
-            bound_.lower_bound == other.bound_.lower_bound &&
-            bound_.upper_bound == other.bound_.upper_bound &&
-            step_ == other.step_);
-  }
+  bool operator==(const Dimension& other) const;
 
  private:
   std::string name_;

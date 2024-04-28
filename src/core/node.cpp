@@ -11,7 +11,7 @@
 namespace libpp_core {
 NodeAttribute::NodeAttribute(const double& value, const Dimension& dimension)
     : value_(value), dimension_(dimension) {
-  if (!dimension.IsValueWithinBound(value)) {
+  if (!dimension_.IsValueWithinBound(value_)) {
     throw OutOfBoundError("Value is not within bound");
   }
 }
