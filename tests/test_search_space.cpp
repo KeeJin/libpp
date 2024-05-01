@@ -16,9 +16,9 @@ int main() {
   spdlog::set_level(spdlog::level::debug);
   spdlog::info("Testing SearchSpace.");
 
-  auto x_dim = Dimension("x dimension", 0, 5, 1);
-  auto y_dim = Dimension("y dimension", 0, 5, 1);
-  auto z_dim = Dimension("z dimension", 0, 5, 1);
+  auto x_dim = Dimension("x dimension", 0, 5, 1, "m");
+  auto y_dim = Dimension("y dimension", 0, 5, 1, "mm");
+  auto z_dim = Dimension("z dimension", 0, 5, 1, "m");
   Dimensions<3> dims = {x_dim, y_dim, z_dim};
   for (const auto& dim : dims) {
     spdlog::debug("Dimension: {}", dim);

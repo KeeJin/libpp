@@ -7,12 +7,18 @@ namespace libpp_core {
 class InvalidBoundError : public std::invalid_argument {
  public:
   InvalidBoundError(const std::string& message)
-      : std::invalid_argument(message) {}
+      : std::invalid_argument("InvalidBounds: " + message) {}
 };
 
 class OutOfBoundError : public std::out_of_range {
  public:
-  OutOfBoundError(const std::string& message) : std::out_of_range(message) {}
+  OutOfBoundError(const std::string& message) : std::out_of_range("OutOfBound: " + message) {}
+};
+
+class DuplicateEdgeError : public std::invalid_argument {
+ public:
+  DuplicateEdgeError(const std::string& message)
+      : std::invalid_argument("DuplicateEdge: " + message) {}
 };
 
 // class FooException : public std::exception {
