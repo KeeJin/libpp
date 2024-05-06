@@ -26,7 +26,7 @@ class libppRecipe(ConanFile):
             del self.options.fPIC
             
     def requirements(self):
-        self.requires("spdlog/1.13.0")
+        self.requires("spdlog/1.10.0")
 
     def layout(self):
         cmake_layout(self)

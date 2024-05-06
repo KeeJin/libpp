@@ -1,63 +1,43 @@
 /**
  * @file utest_search_space.cpp
- * @brief 
+ * @brief
  * @date 20-04-2024
- * 
+ *
  * @copyright Copyright (c) 2024 Cheo Kee Jin.
  */
 
 #include <memory>
 
-#include "libpp/details/search_space.hpp"
-
 #include "gtest/gtest.h"
 
-using namespace libpp;
+#include "libpp/core/search_space.hpp"
 
-TEST(SearchSpaceTest, CheckValidDimensionBounds) {
-  std::shared_ptr<DimensionBase> x_dim = std::make_shared<Dimension<int>>();
-  x_dim->name = "x dimension";
-  std::dynamic_pointer_cast<Dimension<int>>(x_dim)->bound.lower_bound = 0;
-  std::dynamic_pointer_cast<Dimension<int>>(x_dim)->bound.upper_bound = 10;
-  std::dynamic_pointer_cast<Dimension<int>>(x_dim)->step = 1;
+using namespace libpp_core;
 
-  EXPECT_TRUE(x_dim->IsSearchBoundValid());
-  std::cout << x_dim << std::endl;
+TEST(SearchSpaceTest, InitialiseInvalidSearchSpace) {
+  Dimension x_dim = Dimension("valid x dimension", 0, 10, 1);
+  ASSERT_TRUE(x_dim.IsSearchBoundValid());
+
+  Dimension y_dim = Dimension("invalid y dimension", 55.0f, -5.5f, 0.1f);
+  ASSERT_FALSE(y_dim.IsSearchBoundValid());
+
+  Dimensions<2> dims = {x_dim, y_dim};
+
+  // Expect exception to be thrown
+  EXPECT_THROW(SearchSpace<2> space(dims), std::invalid_argument);
 }
 
-TEST(SearchSpaceTest, CheckInvalidDimensionBounds) {
-  std::shared_ptr<DimensionBase> x_dim = std::make_shared<Dimension<int>>();
-  x_dim->name = "x dimension";
-  std::dynamic_pointer_cast<Dimension<int>>(x_dim)->bound.lower_bound = 10;
-  std::dynamic_pointer_cast<Dimension<int>>(x_dim)->bound.upper_bound = 0;
-  std::dynamic_pointer_cast<Dimension<int>>(x_dim)->step = 1;
+TEST(SearchSpaceTest, InitialiseValidSearchSpace) {
+  Dimension x_dim = Dimension("valid x dimension", 0, 10, 1);
+  Dimension y_dim = Dimension("valid y dimension", -5.0f, 55.5f, 0.1f);
+  Dimension t_dim = Dimension("valid time dimension", 0.0, 60.0, 0.05);
 
-  EXPECT_FALSE(x_dim->IsSearchBoundValid());
-}
-
-TEST(SearchSpaceTest, AddDimension) {
-  SearchSpace space;
-  std::shared_ptr<DimensionBase> x_dim = std::make_shared<Dimension<int>>();
-  x_dim->name = "x dimension";
-  std::dynamic_pointer_cast<Dimension<int>>(x_dim)->bound.lower_bound = 0;
-  std::dynamic_pointer_cast<Dimension<int>>(x_dim)->bound.upper_bound = 10;
-  std::dynamic_pointer_cast<Dimension<int>>(x_dim)->step = 1;
-  
-  std::shared_ptr<DimensionBase> y_dim = std::make_shared<Dimension<float>>();
-  y_dim->name = "y dimension";
-  std::dynamic_pointer_cast<Dimension<float>>(y_dim)->bound.lower_bound = -5.0f;
-  std::dynamic_pointer_cast<Dimension<float>>(y_dim)->bound.upper_bound = 55.5f;
-  std::dynamic_pointer_cast<Dimension<float>>(y_dim)->step = 0.1f;
-
-  std::shared_ptr<DimensionBase> t_dim = std::make_shared<Dimension<double>>();
-  t_dim->name = "time dimension";
-  std::dynamic_pointer_cast<Dimension<double>>(t_dim)->bound.lower_bound = 0.0;
-  std::dynamic_pointer_cast<Dimension<double>>(t_dim)->bound.upper_bound = 60.0;
-  std::dynamic_pointer_cast<Dimension<double>>(t_dim)->step = 0.05;
-
-  EXPECT_TRUE(space.AddDimension(x_dim));
-  EXPECT_TRUE(space.AddDimension(y_dim));
-  EXPECT_TRUE(space.AddDimension(t_dim));
-  std::cout << space << std::endl;
-  EXPECT_EQ(space.GetDimensionSize(), 3);
+  Dimensions<3> dims = {x_dim, y_dim, t_dim};
+  try {
+    SearchSpace<3> space(dims);
+    std::cout << space << std::endl;
+    EXPECT_EQ(space.GetDimensionSize(), 3);
+  } catch (const std::invalid_argument& e) {
+    FAIL() << "Exception thrown: " << e.what();
+  }
 }
