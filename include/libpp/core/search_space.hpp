@@ -11,6 +11,7 @@
 
 #include <array>
 #include <memory>
+#include <unordered_set>
 
 #include <spdlog/fmt/ostr.h>
 
@@ -30,17 +31,44 @@ class SearchSpace {
   }
 
   int GetDimensionSize() const { return dims_.size(); }
-  bool IsNodeWithinSearchSpace(const Node<Size>& node) const {
+  bool AddNode(std::shared_ptr<Node<Size>> node) {
+    if (IsNodeWithinSearchSpace(node) && !IsNodeAdded(node->GetAttributes())) {
+      nodes_.insert(node);
+      return true;
+    }
+    return false;
+  }
+  std::shared_ptr<Node<Size>> GetNode(NodeAttributes<Size> attributes) const {
+    for (const auto& node : nodes_) {
+      if (node->GetAttributes() == attributes) {
+        return node;
+      }
+    }
+    return std::shared_ptr<Node<Size>>();
+  }
+  std::unordered_set<std::shared_ptr<Node<Size>>> GetNodes() const {
+    return nodes_;
+  }
+  bool IsNodeWithinSearchSpace(std::shared_ptr<Node<Size>> node) const {
     for (int i = 0; i < Size; ++i) {
-      if (!dims_[i] == (node.GetAttributes()[i].GetDimension())) {
+      if (!(dims_[i] == (node->GetAttributes()[i].GetDimension()))) {
         return false;
       }
     }
     return true;
   }
+  bool IsNodeAdded(NodeAttributes<Size> attributes) const {
+    for (const auto& node : nodes_) {
+      if (node->GetAttributes() == attributes) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   // override << operator to log the search space
-  friend std::ostream& operator<<(std::ostream& os, const SearchSpace& search_space) {
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const SearchSpace& search_space) {
     os << "Logging SearchSpace dimensions: \n";
     for (const auto& dim : search_space.dims_) {
       os << dim;
@@ -51,6 +79,7 @@ class SearchSpace {
 
  private:
   Dimensions<Size> dims_;
+  std::unordered_set<std::shared_ptr<Node<Size>>> nodes_;
 };
 }  // namespace libpp_core
 

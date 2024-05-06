@@ -14,6 +14,7 @@
 #include <memory>
 
 #include "spdlog/spdlog.h"
+#include <spdlog/fmt/ostr.h>
 
 #include "libpp/core/dimension.hpp"
 #include "libpp/core/edge.hpp"
@@ -21,16 +22,24 @@
 
 namespace libpp_core {
 struct NodeAttribute {
+  NodeAttribute();
   NodeAttribute(const double& value, const Dimension& dimension);
 
+  bool SetValue(const double& value);
   double GetValue() const;
-  Dimension GetDimension();
+  Dimension GetDimension() const;
 
   bool operator==(const NodeAttribute& other) const {
     return value_ == other.value_ && dimension_ == other.dimension_;
   }
   bool operator!=(const NodeAttribute& other) const {
     return !(*this == other);
+  }
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const NodeAttribute& attribute) {
+    os << attribute.GetValue() << " ";
+    os << attribute.GetDimension();
+    return os;
   }
 
  private:
@@ -54,12 +63,16 @@ class Node : public std::enable_shared_from_this<Node<Size>> {
   bool IsExplored() const { return is_explored_; }
   NodeAttributes<Size> GetAttributes() const { return attributes_; }
 
+  void SetParent(std::shared_ptr<Node<Size>> parent) { parent_ = parent; }
+  std::shared_ptr<Node<Size>> GetParent() const { return parent_; }
+
   void AddNeighbor(std::shared_ptr<Node<Size>> node) {
     if (IsNeighbour(node)) {
-      SPDLOG_WARN("Node is already a neighbor");
+      // SPDLOG_WARN("Node is already a neighbor");
       return;
     }
-    auto nodes = std::array<std::shared_ptr<Node<Size>>, 2>{this->shared_from_this(), node};
+    auto nodes = std::array<std::shared_ptr<Node<Size>>, 2>{
+        this->shared_from_this(), node};
     auto edge = std::make_shared<Edge<Size>>(nodes);
     AddNeighbor(edge, node);
     node->AddNeighbor(edge, this->shared_from_this());
@@ -68,7 +81,7 @@ class Node : public std::enable_shared_from_this<Node<Size>> {
   void AddNeighbor(std::shared_ptr<Edge<Size>> edge,
                    std::shared_ptr<Node<Size>> node) {
     if (IsNeighbour(node)) {
-      SPDLOG_WARN("Node is already a neighbor");
+      // SPDLOG_WARN("Node is already a neighbor");
       return;
     }
     if (neighbours_.find(edge) != neighbours_.end()) {
@@ -76,7 +89,7 @@ class Node : public std::enable_shared_from_this<Node<Size>> {
           "Edge is already a neighbor to the node");
     }
     neighbours_.insert({edge, node});
-    SPDLOG_INFO("Added neighbor");
+    SPDLOG_TRACE("Added neighbor");
   }
 
   bool IsNeighbour(std::shared_ptr<Node<Size>> node) const {
@@ -144,10 +157,12 @@ class Node : public std::enable_shared_from_this<Node<Size>> {
   NodeAttributes<Size> attributes_;
   std::unordered_map<std::shared_ptr<Edge<Size>>, std::shared_ptr<Node<Size>>>
       neighbours_;
+  std::shared_ptr<Node<Size>> parent_;
 
   // std::unordered_set<std::shared_ptr<Edge<Size>>> edges_;
   // std::unordered_set<std::shared_ptr<Node<Size>>> nodes_;
 };
+
 }  // namespace libpp_core
 
 #endif /* CORE_NODE_HPP */

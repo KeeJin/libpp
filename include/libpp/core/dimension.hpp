@@ -40,7 +40,7 @@ class Dimension {
     os << "Unit: " << dim.unit_ << ", ";
     os << "Lower bound: " << dim.bound_.lower_bound << ", ";
     os << "Upper bound: " << dim.bound_.upper_bound << ", ";
-    os << "Step: " << dim.step_ << std::endl;
+    os << "Step: " << dim.step_;
     return os;
   }
 

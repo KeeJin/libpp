@@ -45,6 +45,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
 
 find_package(spdlog REQUIRED)
 
+## Set log level
+set(SPDLOG_ACTIVE_LEVEL 0)
+
 add_library(${PROJECT_NAME} STATIC
     src/core/dimension.cpp
     src/core/node.cpp

@@ -71,4 +71,8 @@ TEST(NodeTest, NodeNeighbours) {
   EXPECT_TRUE(node_2->IsNeighbour(node_5));
   EXPECT_EQ(node_2->GetNeighbours().size(), 3);
   EXPECT_EQ(node_2->GetEdges().size(), 3);
+
+  EXPECT_EQ(node_2->GetUnexploredNeighbours().size(), 3);
+  node_1->MarkAsExplored();
+  EXPECT_EQ(node_2->GetUnexploredNeighbours().size(), 2);
 }

@@ -19,6 +19,13 @@ target_link_libraries(test_search_space
     ${PROJECT_NAME}
     spdlog::spdlog
 )
+add_executable(test_bfs 
+    test_bfs.cpp
+)
+target_link_libraries(test_bfs
+    ${PROJECT_NAME}
+    spdlog::spdlog
+)
 
 ## Add performance tests
 
