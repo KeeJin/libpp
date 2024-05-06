@@ -45,9 +45,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
 
 find_package(spdlog REQUIRED)
 
-add_library(${PROJECT_NAME} INTERFACE)
-target_link_libraries(${PROJECT_NAME} INTERFACE spdlog::spdlog)
-target_include_directories(${PROJECT_NAME} INTERFACE
+## Set log level
+set(SPDLOG_ACTIVE_LEVEL 0)
+
+add_library(${PROJECT_NAME} STATIC
+    src/core/dimension.cpp
+    src/core/node.cpp
+)
+target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
+target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
