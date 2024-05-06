@@ -45,6 +45,8 @@ class Frontier {
     return node;
   }
 
+  int GetSize() const { return frontier_.size(); }
+
  private:
   std::queue<std::shared_ptr<Node<Size>>> frontier_;
 };

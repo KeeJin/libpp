@@ -3,8 +3,10 @@ add_subdirectory(extern/googletest)
 
 ## Add unit tests
 add_executable(utests
+    unit/utest_dimension.cpp
     unit/utest_search_space.cpp
     unit/utest_node.cpp
+    unit/utest_frontier.cpp
 )
 target_link_libraries(utests
     gtest_main

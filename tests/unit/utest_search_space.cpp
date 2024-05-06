@@ -14,17 +14,6 @@
 
 using namespace libpp_core;
 
-TEST(SearchSpaceTest, CheckValidDimensionBounds) {
-  Dimension x_dim = Dimension("valid x dimension", 0, 10, 1, "m");
-  EXPECT_TRUE(x_dim.IsSearchBoundValid());
-  std::cout << x_dim << std::endl;
-}
-
-TEST(SearchSpaceTest, CheckInvalidDimensionBounds) {
-  Dimension x_dim = Dimension("invalid x dimension", 10, 0, 1);
-  EXPECT_FALSE(x_dim.IsSearchBoundValid());
-}
-
 TEST(SearchSpaceTest, InitialiseInvalidSearchSpace) {
   Dimension x_dim = Dimension("valid x dimension", 0, 10, 1);
   ASSERT_TRUE(x_dim.IsSearchBoundValid());
